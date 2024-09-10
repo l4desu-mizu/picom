@@ -363,6 +363,17 @@ static bool parse_animation_one(struct win_script *animations,
 		log_error("Invalid trigger defined at line %d",
 		          config_setting_source_line(triggers));
 	}
+	if ((trigger_types & (1 << ANIMATION_TRIGGER_ALIAS_GEOMETRY)) != 0) {
+		const uint64_t to_set =
+		    (1 << ANIMATION_TRIGGER_SIZE) | (1 << ANIMATION_TRIGGER_POSITION);
+		if ((trigger_types & to_set) != 0) {
+			log_warn("Trigger \"geometry\" is an alias of \"size\" and "
+			         "\"position\", but one or both of them are also set at "
+			         "line %d",
+			         config_setting_source_line(triggers));
+		}
+		trigger_types |= to_set;
+	}
 
 	// script parser shouldn't see this.
 	config_setting_remove(setting, "triggers");
