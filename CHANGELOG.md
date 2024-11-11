@@ -14,6 +14,10 @@
   - `sw-opti`
   - `clear-shadow`
 
+## Bug fixes
+
+* Fix assertion failure when running with some window managers (e.g. qtile) and no window is focused (#1384)
+
 # 12.x (unreleased)
 
 ## Build fixes
