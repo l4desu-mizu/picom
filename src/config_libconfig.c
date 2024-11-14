@@ -227,8 +227,9 @@ static inline void parse_wintype_config(const config_t *cfg, const char *member_
 }
 
 enum animation_trigger parse_animation_trigger(const char *trigger) {
-	for (unsigned i = 0; i < ANIMATION_TRIGGER_COUNT; i++) {
-		if (strcasecmp(trigger, animation_trigger_names[i]) == 0) {
+	for (unsigned i = 0; i < ARR_SIZE(animation_trigger_names); i++) {
+		if (animation_trigger_names[i] != NULL &&
+		    strcasecmp(trigger, animation_trigger_names[i]) == 0) {
 			return i;
 		}
 	}
