@@ -19,6 +19,7 @@
 #include "common.h"
 #include "compiler.h"
 #include "config.h"
+#include "dbus/dbus-protocol.h"
 #include "log.h"
 #include "picom.h"
 #include "utils/misc.h"
@@ -1284,8 +1285,14 @@ static DBusHandlerResult cdbus_process(DBusConnection *conn, DBusMessage *msg, v
 
 	if (dbus_message_is_method_call(msg, DBUS_INTERFACE_INTROSPECTABLE, "Introspect")) {
 		ret = cdbus_process_introspect(reply);
+	} else if (interface == NULL) {
+		dbus_set_error_const(&err, DBUS_ERROR_UNKNOWN_INTERFACE, "No Interface given.");
 	} else if (strcmp(interface, CDBUS_INTERFACE_NAME) != 0) {
-		dbus_set_error_const(&err, DBUS_ERROR_UNKNOWN_INTERFACE, NULL);
+		char *message;
+		asprintf(&message, "No Interface with name \"%s\"", interface);
+		dbus_set_error_const(&err, DBUS_ERROR_UNKNOWN_INTERFACE, message);
+	} else if (member == NULL) {
+		dbus_set_error_const(&err, DBUS_ERROR_UNKNOWN_METHOD, "No method given.");
 	} else {
 		static const struct {
 			const char *name;
